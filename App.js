@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -25,8 +25,15 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {ReactNativeKeycloakProvider, RNKeycloak} from '@react-keycloak/native';
+import construct from "@babel/runtime/helpers/esm/construct";
 
 const App: () => React$Node = () => {
+    // const { keycloak } = useKeycloak();
+    useEffect(() => {
+        console.log('DDD');
+        keycloak?.login();
+    });
+
     const keycloak = new RNKeycloak({
         url: 'http://192.168.8.100:8080/auth',
         realm: 'master',
@@ -35,8 +42,8 @@ const App: () => React$Node = () => {
     const userDetail = useCallback(async () => {
         console.log(keycloak.authenticated);
         console.log(keycloak.token);
-        if(keycloak.idTokenParsed)
-        console.log(keycloak.idTokenParsed.preferred_username);
+        if (keycloak.idTokenParsed)
+            console.log(keycloak.idTokenParsed.preferred_username);
     });
     return (
         <>
@@ -58,12 +65,13 @@ const App: () => React$Node = () => {
                             initOptions={{
                                 redirectUri: 'ncell://login',
                                 inAppBrowserOptions: {
+                                    showTitle: false,
                                     enableUrlBarHiding: true,
-                                    showTitle: false
+                                    enableDefaultShare: false
                                 }
                             }}>
 
-                            <Button onPress={() => keycloak?.login()} title="LOGIN" style={styles.buttonSample}/>
+                            {/*<Button onPress={() => keycloak?.login()} title="LOGIN" style={styles.buttonSample}/>*/}
                             <Button onPress={() => keycloak?.logout()} title="LOGOUT" style={styles.buttonSample}/>
                         </ReactNativeKeycloakProvider>
 
